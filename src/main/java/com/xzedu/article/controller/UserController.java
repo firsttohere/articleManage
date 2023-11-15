@@ -3,9 +3,14 @@ package com.xzedu.article.controller;
 import com.xzedu.article.common.Result;
 import com.xzedu.article.pojo.UserInfo;
 import com.xzedu.article.service.UserService;
+import com.xzedu.article.utils.JWTUtil;
+import com.xzedu.article.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ClassName : UserController
@@ -52,4 +57,33 @@ public class UserController {
         userService.registerUserInfo(uI);
         return Result.success();
     }
+
+    /**
+    * @Title: 使用账号密码登录
+    * @Param: userName用户名 pwd密码
+    * @description: 登录功能，如果用户名密码输入正确，登录成功。登录成功后生成jwt（token）响应给前端，之后访问主服务时，需要携带token
+    * @author: xiangzhou
+    * @date: 2023/11/15 8:49
+    * @return: com.xzedu.article.common.Result<java.lang.String>
+    */
+    @GetMapping("/login/{userName}/{pwd}")
+    public Result<String> login (@PathVariable("userName") String userName,
+                                 @PathVariable("pwd") String pwd) {
+        UserInfo u = userService.findByUserName(userName);
+        if (u == null) {
+            return Result.failure("系统没有此用户, 请先注册");
+        }
+        if (!u.getPwd().equals(MD5Util.encode(pwd))) {
+            return Result.failure("密码错误");
+        }
+        // 登录成功，生成token
+        Map<String, Object> userInfoMap = new HashMap<>();
+        userInfoMap.put("userName", userName);
+        userInfoMap.put("sex", u.getSex());
+        userInfoMap.put("phone", u.getPhone());
+        userInfoMap.put("email", u.getEmail());
+        String token = JWTUtil.genToken("user", userInfoMap);
+        return Result.success(token);
+    }
+
 }
