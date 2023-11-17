@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 1.写该文件对应的那个接口的全类名 -->
+<mapper namespace="com.xzedu.article.mapper.SysTablePropsMapper">
+    <select id="getTableProps" resultType="com.xzedu.article.pojo.SysTableProps">
+        select * from sys_table_props where props_no = #{propsNo}
+    </select>
+</mapper>

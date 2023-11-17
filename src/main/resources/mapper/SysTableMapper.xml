@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 1.写该文件对应的那个接口的全类名 -->
+<mapper namespace="com.xzedu.article.mapper.SysTableMapper">
+    <resultMap id="RMSysTable" type="com.xzedu.article.pojo.SysTable">
+        <id column="table_no" property="tableNo"/>
+        <result column="table_name" property="tableName"/>
+        <result column="props_no" property="propsNo"/>
+        <association property="tableProps" column="props_no" select="com.xzedu.article.mapper.SysTablePropsMapper.getTableProps"/>
+        <collection property="tableColumns" column="table_no" select="com.xzedu.article.mapper.SysTableColumnsMapper.getTableColumns"/>
+    </resultMap>
+    <select id="getById" resultMap="RMSysTable">
+        select * from sys_table where table_no = #{tableNo}
+    </select>
+</mapper>

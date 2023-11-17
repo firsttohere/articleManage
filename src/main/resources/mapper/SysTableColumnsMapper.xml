@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 1.写该文件对应的那个接口的全类名 -->
+<mapper namespace="com.xzedu.article.mapper.SysTableColumnsMapper">
+    <select id="getTableColumns" resultType="com.xzedu.article.pojo.SysTableColumns">
+        select a.* from sys_table_columns a inner join table_rel_column b on a.column_no = b.column_no
+        where b.table_no = #{tableNo} order by b.seqn asc
+    </select>
+</mapper>
