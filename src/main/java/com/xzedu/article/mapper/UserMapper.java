@@ -4,6 +4,7 @@ import com.xzedu.article.pojo.UserInfo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * @ClassName : UserMapper
@@ -24,4 +25,13 @@ public interface UserMapper {
 
     @Select("select * from user_info where email = #{email}")
     UserInfo selectByEmail(String email);
+
+    @Update("update user_info set phone = #{phone}, email = #{email}, udt_dtime = now() where user_name = #{userName}")
+    void updatePhoneAndEmail(String userName, String phone, String email);
+
+    @Update("update user_info set url = #{url} where user_name = #{userName}")
+    void updateUrl(String userName, String url);
+
+    @Update("update user_info set pwd = #{newPwd} where user_name = #{userName}")
+    void updatePwd(String userName, String newPwd);
 }

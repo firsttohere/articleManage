@@ -1,9 +1,11 @@
 package com.xzedu.article.service.impl;
 
+import com.xzedu.article.exception.ServiceException;
 import com.xzedu.article.mapper.UserMapper;
 import com.xzedu.article.pojo.UserInfo;
 import com.xzedu.article.service.UserService;
 import com.xzedu.article.utils.MD5Util;
+import com.xzedu.article.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +41,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfo findByEmail(String email) {
         return userMapper.selectByEmail(email);
+    }
+
+    @Override
+    public UserInfo getUserInfo() {
+        return UserUtil.getUserInfo();
+    }
+
+    @Override
+    public void updatePhoneAndEmail(String phone, String email) {
+        userMapper.updatePhoneAndEmail(UserUtil.getUserInfo().getUserName(), phone, email);
+    }
+
+    @Override
+    public UserInfo findByUserName(){
+        return findByUserName(UserUtil.getUserInfo().getUserName());
+    }
+
+    @Override
+    public void updateUrl(String url) {
+        userMapper.updateUrl(UserUtil.getUserInfo().getUserName(), url);
+    }
+
+    @Override
+    public void updatePwd(String newPwd) {
+        userMapper.updatePwd(UserUtil.getUserInfo().getUserName(), MD5Util.encode(newPwd));
     }
 }

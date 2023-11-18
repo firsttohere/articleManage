@@ -1,5 +1,6 @@
 package com.xzedu.article.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
 
@@ -7,6 +8,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.sql.Date;
+import java.time.LocalDateTime;
 
 /**
  * @ClassName : UserInfo
@@ -16,7 +19,7 @@ import javax.validation.constraints.Pattern;
  */
 @Data
 public class UserInfo {
-    private String id;// 主键
+    private Integer id;// 主键
 
     @Pattern(regexp = "^\\S{6,11}$")
     @NotEmpty
@@ -24,6 +27,7 @@ public class UserInfo {
 
     @Pattern(regexp = "^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\\W_]+$)(?![a-z0-9]+$)(?![a-z\\W_]+$)(?![0-9\\W_]+$)[a-zA-Z0-9\\W_]{8,16}$")
     @NotEmpty
+    @JsonIgnore
     private String pwd;// 密码必须至少包含，数字，大小写字母，特殊字符 其中三者
 
     @Pattern(regexp = "^[01]$")
@@ -37,10 +41,10 @@ public class UserInfo {
     @Email
     @NotEmpty
     private String email;// 邮箱
-    private String manager_flg;// 2代表管理员,1代表会员,0代表普通用户
+    private String managerFlg;// 2代表管理员,1代表会员,0代表普通用户
 
     @URL
-    private String img_url;// 头像地址
-    private String crtDtime;// 注册的时间
-    private String udtDtime;// 更新时间
+    private String imgUrl;// 头像地址
+    private LocalDateTime crtDtime;// 注册的时间
+    private LocalDateTime udtDtime;// 更新时间
 }
