@@ -1,14 +1,19 @@
 package com.xzedu.article.controller;
 
+
 import com.xzedu.article.common.Result;
 import com.xzedu.article.pojo.UserInfo;
 import com.xzedu.article.service.UserService;
 import com.xzedu.article.utils.JWTUtil;
 import com.xzedu.article.utils.MD5Util;
+import com.xzedu.article.utils.RedisUtil;
+import com.xzedu.article.utils.UserUtil;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
@@ -97,6 +102,8 @@ public class UserController {
 //        userInfoMap.put("udtDtime", u.getUdtDtime().toString());
         String token = JWTUtil.genToken("user", userInfoMap);
         map.put("token", token);
+        // 将token放在redis中
+        RedisUtil.putToken(userName, token);
         map.put("userInfo", u);
         return Result.success(map);
     }
@@ -110,7 +117,8 @@ public class UserController {
 
     @GetMapping("/exit")
     public Result<String> exit() {
-
+        // 使得token失效
+        RedisUtil.removeToken(UserUtil.getUserInfo().getUserName());
         return Result.success();
     }
 
@@ -137,6 +145,7 @@ public class UserController {
 //        userInfoMap.put("udtDtime", u.getUdtDtime().toString());
         String token = JWTUtil.genToken("user", userInfoMap);
         map.put("token", token);
+        RedisUtil.putToken(u.getUserName(), token);
         return Result.success(map);
     }
 
@@ -161,6 +170,7 @@ public class UserController {
 //        userInfoMap.put("udtDtime", u.getUdtDtime());
         String token = JWTUtil.genToken("user", userInfoMap);
         map.put("token", token);
+        RedisUtil.putToken(u.getUserName(), token);
         return Result.success(map);
     }
 
@@ -181,6 +191,8 @@ public class UserController {
         }
         // 更新密码
         userService.updatePwd(newPwd);
+        // 把token清除
+        RedisUtil.removeToken(u.getUserName());
         return Result.success();
     }
 }

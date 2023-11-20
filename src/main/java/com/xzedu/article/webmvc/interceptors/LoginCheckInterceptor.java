@@ -5,8 +5,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.xzedu.article.utils.RedisUtil;
 import com.xzedu.article.utils.UserUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -42,7 +46,14 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
                 return false;
             }
             // 验签通过后，为了方便，把token中携带的用户信息存储到ThreadLocal中
-            UserUtil.putUserInfo(decodedJWT.getClaim("user").asMap());
+            Map<String, Object> user = decodedJWT.getClaim("user").asMap();
+            String nowToken = RedisUtil.getToken(user.get("userName").toString());// 用户现在使用的token
+            // 某一刻，一个用户只允许有一个token有效
+            if (!token.equals(nowToken)) {//token已经被启=弃用了
+                response.setStatus(401);
+                return false;
+            }
+            UserUtil.putUserInfo(user);
             return true;
         }
         response.setStatus(401);

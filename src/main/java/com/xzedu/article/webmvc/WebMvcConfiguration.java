@@ -1,6 +1,5 @@
 package com.xzedu.article.webmvc;
 
-import com.xzedu.article.webmvc.interceptors.ExitSystemInterceptor;
 import com.xzedu.article.webmvc.interceptors.LoginCheckInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,14 +18,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Autowired
     private LoginCheckInterceptor loginCheckInterceptor;
 
-    @Autowired
-    private ExitSystemInterceptor exitSystemInterceptor;
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginCheckInterceptor)
                 .excludePathPatterns("/user/login/**", "/user/register");
-        registry.addInterceptor(exitSystemInterceptor)
-                .addPathPatterns("/user/exit");
     }
 }

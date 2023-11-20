@@ -4,7 +4,12 @@ spring:
     url: jdbc:mysql://localhost:3307/articledb?serverTimezone=UTC
     username: root
     password: abc123
-
+  redis:
+    # host: 192.168.200.131
+    sentinel:
+      master: mymaster
+      nodes: 192.168.200.131:26380,192.168.200.131:26381,192.168.200.131:26382
+    database: 15
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

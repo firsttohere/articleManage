@@ -2,6 +2,8 @@ package com.xzedu.article.service;
 
 import com.xzedu.article.pojo.Category;
 
+import java.util.List;
+
 /**
  * @ClassName : CategoryService
  * @Description : CategoryService
@@ -10,4 +12,11 @@ import com.xzedu.article.pojo.Category;
  */
 public interface CategoryService {
     void add(Category category);
+
+    List<Category> findByCreateUser();
+
+    void modifyCategory(Category category);
+
+    void delete(Integer id);
+
 }

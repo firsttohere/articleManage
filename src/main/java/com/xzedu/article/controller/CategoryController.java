@@ -4,9 +4,10 @@ import com.xzedu.article.common.Result;
 import com.xzedu.article.pojo.Category;
 import com.xzedu.article.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @ClassName : CategoryController
@@ -22,8 +23,27 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping
-    public Result<String> add(@RequestBody @Validated Category category) {
+    // 使用validated注解时可以指定校验的组
+    public Result<String> add(@RequestBody @Validated({Category.Add.class}) Category category) {
         categoryService.add(category);
+        return Result.success();
+    }
+
+    @GetMapping
+    public Result<List<Category>> allOwn() {
+        return Result.success(categoryService.findByCreateUser());
+    }
+
+
+    @PutMapping
+    public Result<String> modify(@RequestBody @Validated({Category.Modify.class}) Category category) {
+        categoryService.modifyCategory(category);
+        return Result.success();
+    }
+
+    @DeleteMapping
+    public Result<String> delete(@RequestBody @Validated({Category.Delete.class}) Category category) {
+        categoryService.delete(category.getId());
         return Result.success();
     }
 }
